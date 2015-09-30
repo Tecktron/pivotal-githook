@@ -91,7 +91,7 @@ if [[ $OS_TYPE == 0 ]];
 then
     cp --backup=existing ./commit-msg.py "${current}/hooks/commit-msg"
 else
-    cp --backup=existing ./commit-msg.py "${current}/hooks/commit-msg"
+    cp ./commit-msg.py "${current}/hooks/commit-msg"
 fi
 chmod 775 "${current}/hooks/commit-msg"
 
