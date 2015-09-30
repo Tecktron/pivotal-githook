@@ -25,6 +25,12 @@ function os_check()
 OS=`uname`
 OS_TYPE=$(os_check $OS)
 
+if [ "${OS_TYPE}" == 0 ];
+then
+    echo "Sorry, your OS is not supported. Goodbye."
+    exit 8;
+fi
+
 echo -e "\e[1;44;93mPivotal Tracker Git Hook Installer\e[0m"
 echo -e "This will automagically add the story url as part of your commit message."
 echo "Please remember to formulate your branch names in the given format:"
