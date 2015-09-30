@@ -9,7 +9,7 @@ function program_is_installed {
   echo "$return_"
 }
 
-echo -e "\e[1;44;93mHI Pivotal Tracker Git Hook Installer\e[0m"
+echo -e "\e[1;44;93mPivotal Tracker Git Hook Installer\e[0m"
 echo -e "This will automagically add the story url as part of your commit message."
 echo "Please remember to formulate your branch names in the given format:"
 echo -e "\e[1;93mType\e[0m-\e[92mid\e[0m-(optional)other-text\e[0m"
@@ -64,7 +64,7 @@ then
 fi
 
 echo "Adding hook"
-cp ./commit-msg.py "${current}/hooks/commit-msg"
+cp --backup=existing ./commit-msg.py "${current}/hooks/commit-msg"
 chmod 775 "${current}/hooks/commit-msg"
 
 echo "Installation complete"
