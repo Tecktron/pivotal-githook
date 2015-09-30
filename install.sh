@@ -62,6 +62,12 @@ then
     exit
 fi
 
+base='/usr/share/git-core/templates/.'
+if [ "${OS_TYPE}" == 1 ];
+then
+    base="/usr/local/share/git-core/templates/."
+fi
+
 current=$(git config --global --get init.templatedir)
 default=~/.git-templates
 
@@ -74,7 +80,7 @@ then
         mkdir -p $default
     fi
     echo "Copying base template"
-    cp -r /usr/share/git-core/templates/. "${default}"
+    cp -r "${base}" "${default}"
     current=$default
     git config --global init.templatedir "${current}"
     if [ "${OS_TYPE}" == 1 ];
