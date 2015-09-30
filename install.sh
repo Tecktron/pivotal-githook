@@ -63,7 +63,7 @@ then
 fi
 
 base='/usr/share/git-core/templates/.'
-if [ "${OS_TYPE}" == 1 ];
+if [ "${OS_TYPE}" == 2 ];
 then
     base="/usr/local/share/git-core/templates/."
 fi
@@ -93,7 +93,7 @@ then
 fi
 
 echo "Adding hook"
-if [[ $OS_TYPE == 0 ]];
+if [[ $OS_TYPE == 1 ]];
 then
     cp --backup=existing ./commit-msg.py "${current}/hooks/commit-msg"
 else
