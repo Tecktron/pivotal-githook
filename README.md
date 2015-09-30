@@ -9,10 +9,10 @@ When provided with a properly formulated branch name, the id will be stripped an
 This makes it easy for anybody looking though your commits, to find out what the issue fix was pertaining to.
 
 In order to use this, branches should be named in the following manner:
-- (Type of issue)-(id of issue)
+- (Type of issue)-(id of issue from pivotal)
 
 If you wish to add more detail to the branch name you can use
-- (Type of issue)-(id of issue)-(any other text goes here)
+- (Type of issue)-(id of issue from pivotal)-(any other text goes here)
 
 EG:
 - bugfix-123456
@@ -22,7 +22,10 @@ Branch names with invalid formats will be ignored and commit messages will be le
 
 ## Installation
 
-Run the install.sh file. This will check dependencies and create or add too (with backup) the necessary git templates.
+- git clone the repo onto your local machine
+- Run the install.sh file.
+
+This will check dependencies and create or add to (with backup) the necessary git templates.
 
 Once the install is complete, you simple need to run *git init* (this will not delete anything) in your existing repositories to install the hook. New repos will automatically have this.
 

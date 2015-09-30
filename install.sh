@@ -9,6 +9,22 @@ function program_is_installed {
   echo "$return_"
 }
 
+function os_check()
+{
+    local result=0
+    if [ $1 == 'Linux' ];
+    then
+        local result=1
+    elif [ $1 == 'Darwin' ];
+    then
+        local result=2
+    fi
+    echo $result
+}
+
+OS=`uname`
+OS_TYPE=$(os_check $OS)
+
 echo -e "\e[1;44;93mPivotal Tracker Git Hook Installer\e[0m"
 echo -e "This will automagically add the story url as part of your commit message."
 echo "Please remember to formulate your branch names in the given format:"
@@ -61,10 +77,22 @@ then
     cp -r /usr/share/git-core/templates/. "${default}"
     current=$default
     git config --global init.templatedir "${current}"
+    if [ "${OS_TYPE}" == 1 ];
+    then
+        if [[ -e "${current}/hooks/commit-msg" ]];
+        then
+            mv "${current}/hooks/commit-msg" "${current}/hooks/commit-msg.sav"
+        fi
+    fi
 fi
 
 echo "Adding hook"
-cp --backup=existing ./commit-msg.py "${current}/hooks/commit-msg"
+if [[ $OS_TYPE == 0 ]];
+then
+    cp --backup=existing ./commit-msg.py "${current}/hooks/commit-msg"
+else
+    cp --backup=existing ./commit-msg.py "${current}/hooks/commit-msg"
+fi
 chmod 775 "${current}/hooks/commit-msg"
 
 echo "Installation complete"
