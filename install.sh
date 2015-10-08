@@ -14,10 +14,10 @@ function os_check()
     local result=0
     if [ $1 == 'Linux' ];
     then
-        local result=1
+        local result=1 #linux
     elif [ $1 == 'Darwin' ];
     then
-        local result=2
+        local result=2 #mac
     fi
     echo $result
 }
@@ -64,32 +64,39 @@ echo ""
 
 if [ "${pass}" == 1 ];
 then
-    echo -e "\e[1;41;15mPlease make sure all denpencencies are installed and try again.\e[0m"
+    echo -e "\e[1;41;15mPlease make sure all dependencies are installed and try again.\e[0m"
     exit
 fi
 
-base='/usr/share/git-core/templates/.'
-if [ "${OS_TYPE}" == 2 ];
-then
-    base="/usr/local/share/git-core/templates/."
-fi
-
+# Get the current setting if one exists
 current=$(git config --global --get init.templatedir)
 default=~/.git-templates
 
 if [ "${current}" == "" ];
 then
     echo "Setting up new templates"
+    printf "Searching for base git directory..."
+    # Search the usr directory for the git templates directory
+    base=$(find /usr -mount -type d -wholename "*git-core/templates*" | head -n1)
+    if [ "${base}" == "" ];
+    then
+        echo -e "\e[1;41;15mCould not find base git directory. Please try a manual install.\e[0m"
+        exit
+    else
+        echo "found at ${base}"
+        echo ""
+    fi
+
     if [[ ! -e $default ]];
     then
-
         mkdir -p $default
     fi
     echo "Copying base template"
-    cp -r "${base}" "${default}"
+    cp -r "${base}/." "${default}"
     current=$default
     git config --global init.templatedir "${current}"
-    if [ "${OS_TYPE}" == 1 ];
+    # Mac cp doesn't support --backup like linux , so we manually do this here.
+    if [ "${OS_TYPE}" == 2 ];
     then
         if [[ -e "${current}/hooks/commit-msg" ]];
         then
