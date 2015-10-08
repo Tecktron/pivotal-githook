@@ -31,11 +31,11 @@ Branch names with invalid formats will be ignored and commit messages will be le
 
 This will check dependencies and create or add to (with backup) the necessary git templates.
 
-Once the install is complete, you simple need to run *git init* (this will not delete anything) in your existing repositories to install the hook. New repos will automatically have this.
+Once the install is complete, you simply need to run `git init` (this will not delete anything) in your existing repositories to install the hook. New repos will automatically have it.
 
 If you run into any problems, please try the manual install below, open an issue or make a pull request.
 
-**Please Note:** Currently the installation script is not compatible with windows. To install on windows, please follow the manual install instructions below. However, you should note that you may have to create a wrapper around the the python file in order for ir to properly run.
+**Please Note:** Currently the installation script is *not compatible with windows*. To install on windows, please follow the manual install instructions below. However, you should note that you may have to create a wrapper around the the python file in order for ir to properly run.
 
 ## Manual Install
 
