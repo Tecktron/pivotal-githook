@@ -4,39 +4,54 @@
 # story URL to each commit message, if the branch is properly named.
 # This takes place after a successful commit message is save, otherwise
 # the commit is properly aborted.
-
-import sys, re
+import sys
+import re
+import os
 from subprocess import check_output
 
 
-def get_message(file):
+def get_message(file_name):
     """
     Retrieves the message of the file without lines that contain comments.
-    :param file:  file
+    :param string: file_name
     :return: the message of the text.
     """
+    commit_file = open(file_name, 'r')
     text = ""
-    line = file.readline()
+    line = commit_file.readline()
     while line:
         # strip out comments as we don't want to count them (they'll be removed anyway).
         stripped = line.strip()
         if len(stripped) > 0 and stripped[0] != '#':
-            text += stripped
+            text += stripped + "\n"
 
-        line = file.readline()
+        line = commit_file.readline()
 
+    commit_file.close()
     return text
+
+
+def write_message(message, file_name):
+    """
+    Writes the new message
+    :param message: the message to write
+    :param file_name: the filename
+    """
+    commit_file = open(file_name, 'w')
+    commit_file.write(message)
+    commit_file.close()
+
 
 if not sys.argv[1]:
     exit(1)
 
+commit_file_name = os.getcwd() + "/" + sys.argv[1]
+
 # open and read the file
-commit_file = open(sys.argv[1], 'r+')
-message = get_message(commit_file)
+message = get_message(commit_file_name)
 
 # with comments striped out, if the message is empty, abort commit
 if message == "":
-    commit_file.close()
     exit(1)
 
 # find the ID from out branch name
@@ -45,7 +60,6 @@ regex = "-([0-9]+)[-]*"
 match = re.search(regex, branch)
 # If there is no match, then just exit and proceed as normal
 if not match:
-    commit_file.close()
     exit(0)
 
 url = "https://www.pivotaltracker.com/story/show/{}".format(match.group(1))
@@ -54,9 +68,6 @@ url = "https://www.pivotaltracker.com/story/show/{}".format(match.group(1))
 match = re.search(url, message)
 if not match:
     message += "\n" + url + "\n"
-    commit_file.seek(0,0)
-    commit_file.truncate(0)
-    commit_file.write(message)
+    write_message(message, commit_file_name)
 
-commit_file.close()
 exit(0)
