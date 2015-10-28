@@ -2,7 +2,7 @@
 #
 # This git hook will automagically append the pivotal tracker
 # story URL to each commit message, if the branch is properly named.
-# This takes place after a successful commit message is save, otherwise 
+# This takes place after a successful commit message is save, otherwise
 # the commit is properly aborted.
 
 import sys, re
@@ -19,9 +19,9 @@ def get_message(file):
     line = file.readline()
     while line:
         # strip out comments as we don't want to count them (they'll be removed anyway).
-        line = line.strip()
-        if line and line[0] != '#':
-            text += line
+        stripped = line.strip()
+        if len(stripped) > 0 and stripped[0] != '#':
+            text += stripped
 
         line = file.readline()
 
@@ -53,8 +53,9 @@ url = "https://www.pivotaltracker.com/story/show/{}".format(match.group(1))
 # don't add the url twice (for amending)
 match = re.search(url, message)
 if not match:
-    message += "\n" + url
+    message += "\n" + url + "\n"
     commit_file.seek(0,0)
+    commit_file.truncate(0)
     commit_file.write(message)
 
 commit_file.close()
