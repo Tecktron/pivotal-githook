@@ -45,16 +45,7 @@ def write_message(message, file_name):
 if not sys.argv[1]:
     exit(1)
 
-commit_file_name = os.getcwd() + "/" + sys.argv[1]
-
-# open and read the file
-message = get_message(commit_file_name)
-
-# with comments striped out, if the message is empty, abort commit
-if message == "":
-    exit(1)
-
-# find the ID from out branch name
+# find the ID from the branch name
 branch = check_output(['git', 'symbolic-ref', '--short', 'HEAD']).strip()
 regex = "-([0-9]+)[-]*"
 match = re.search(regex, branch)
@@ -62,9 +53,18 @@ match = re.search(regex, branch)
 if not match:
     exit(0)
 
+# formulate the url from the match
 url = "https://www.pivotaltracker.com/story/show/{}".format(match.group(1))
 
-# don't add the url twice (for amending)
+# since we have a match, lets open the file and get the message
+commit_file_name = os.getcwd() + "/" + sys.argv[1]
+message = get_message(commit_file_name)
+
+# with comments striped out, if the message is empty, abort commit
+if message == "":
+    exit(1)
+
+# We shouldn't add the url twice (for amending)
 match = re.search(url, message)
 if not match:
     message += "\n" + url + "\n"
