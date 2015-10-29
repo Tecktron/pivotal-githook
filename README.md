@@ -31,7 +31,10 @@ Branch names with invalid formats will be ignored and commit messages will be le
 
 This will check dependencies and create or add to (with backup) the necessary git templates.
 
-Once the install is complete, you simply need to run `git init` (this will not delete anything) in your existing repositories to install the hook. New repos will automatically have it.
+The script will ask you if you wish to have your git directories automatically updated. If you select yes, then your home directory will be searched for git repos and they will be updated.
+If you select no, then once the install is complete, you simply need to run `git init` (this will not delete anything) in your existing repositories to install the hook.
+If you are updating, please see the section under manual install.
+New repos will automatically have it.
 
 If you run into any problems, please try the manual install below, open an issue or make a pull request.
 
@@ -39,7 +42,7 @@ If you run into any problems, please try the manual install below, open an issue
 
 ## Manual Install
 
-Make sure that the requirements are met. 
+Make sure that the requirements are met.
 If you already have a template directroy installed, then simply copy the commit-msg.py hook into the hooks directory and remove the .py
 
 The rest of this guide will help you set up a git template directory with the hook in it
@@ -52,3 +55,5 @@ The rest of this guide will help you set up a git template directory with the ho
 6. That's is, you're done. Make sure that the commit-msg is executable (non-windows) and remember to run `git init` in your current git repos.
 
 
+## Updating
+If you are updating the hook from a previous version and you have done a manual install or selected no to automatically update your repos, then you need to make sure that you **manually delete the previous hook from all your repos** before running `git init` on them, otherwise the hook will not be updated. The hook can be found in the `.git/hooks` folder of your repos.

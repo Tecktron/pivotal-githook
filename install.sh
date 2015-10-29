@@ -31,40 +31,40 @@ then
     exit 8;
 fi
 
-echo -e "\e[1;44;93mPivotal Tracker Git Hook Installer\e[0m"
-echo -e "This will automagically add the story url as part of your commit message."
-echo "Please remember to formulate your branch names in the given format:"
-echo -e "\e[1;93mType\e[0m-\e[92mid\e[0m-(optional)other-text\e[0m"
-echo "EG:"
-echo "bugfix-123456"
-echo "feature-98765-new-feature-added"
-echo ""
-echo "Branch names with invalid formats will be ignored"
-echo ""
-echo "Checking dependencies..."
+printf "\e[1;44;93mPivotal Tracker Git Hook Installer\e[0m\n"
+printf "This will automagically add the story url as part of your commit message.\n"
+printf "Please remember to formulate your branch names in the given format:\n"
+printf "\e[1;93mType\e[0m-\e[92mid\e[0m-(optional)other-text\e[0m\n"
+printf "EG:\n"
+printf "bugfix-123456\n"
+printf "feature-98765-new-feature-added\n"
+printf "\n"
+printf "Branch names with invalid formats will be ignored\n"
+printf "\n"
+printf "Checking dependencies...\n"
 pass=0
 printf "Checking if \e[1mgit\e[0m is installed..."
 if [ $(program_is_installed 'git') == 0 ];
 then
-    echo -e "\e[1;91m Fail \e[0m"
+    printf "\e[1;91m Fail \e[0m\n"
     pass=1
 else
-    echo -e "\e[1;92m Pass \e[0m"
+    printf "\e[1;92m Pass \e[0m\n"
 fi
 printf "Checking if \e[1mPython\e[0m is installed..."
 if [ $(program_is_installed 'python') == 0 ];
 then
-    echo -e "\e[1;91m Fail \e[0m"
+    printf "\e[1;91m Fail \e[0m\n"
     pass=1
 else
-    echo -e "\e[1;92m Pass \e[0m"
+    printf "\e[1;92m Pass \e[0m\n"
 fi
 
-echo ""
+printf "\n"
 
 if [ "${pass}" == 1 ];
 then
-    echo -e "\e[1;41;15mPlease make sure all dependencies are installed and try again.\e[0m"
+    printf "\e[1;41;15mPlease make sure all dependencies are installed and try again.\e[0m\n"
     exit
 fi
 
@@ -74,24 +74,24 @@ default=~/.git-templates
 
 if [ "${current}" == "" ];
 then
-    echo "Setting up new templates"
+    printf "Setting up new templates\n"
     printf "Searching for base git directory..."
     # Search the usr directory for the git templates directory
     base=$(find /usr -mount -type d -wholename "*git-core/templates*" | head -n1)
     if [ "${base}" == "" ];
     then
-        echo -e "\e[1;41;15mCould not find base git directory. Please try a manual install.\e[0m"
+        printf "\e[1;41;15mCould not find base git directory. Please try a manual install.\e[0m\n"
         exit
     else
-        echo "found at ${base}"
-        echo ""
+        printf "found at ${base}\n"
+        printf "\n"
     fi
 
     if [[ ! -e $default ]];
     then
         mkdir -p $default
     fi
-    echo "Copying base template"
+    printf "Copying base template\n"
     cp -r "${base}/." "${default}"
     current=$default
     git config --global init.templatedir "${current}"
@@ -100,12 +100,12 @@ then
     then
         if [[ -e "${current}/hooks/commit-msg" ]];
         then
-            mv "${current}/hooks/commit-msg" "${current}/hooks/commit-msg.sav"
+            mv "${current}/hooks/commit-msg" "${current}/hooks/commit-msg.old"
         fi
     fi
 fi
 
-echo "Adding hook"
+printf "Adding hook\n"
 if [[ $OS_TYPE == 1 ]];
 then
     cp --backup=existing ./commit-msg.py "${current}/hooks/commit-msg"
@@ -114,5 +114,34 @@ else
 fi
 chmod 775 "${current}/hooks/commit-msg"
 
-echo "Installation complete"
-echo -e "Please be sure to run \e[1m'git init'\e[0m in your current git directories"
+
+read -p "Do you want me to install the hook for you [Y/n]?" dosearch
+dosearch=${dosearch,,}
+if [[ "${dosearch}" != 'n' ]];
+then
+    find $HOME -type d -name ".git" -print0 | while read -d $'\0' gitdir;
+    do
+        #skip anything in the trash
+        if [[ ! "${gitdir}" =~ 'Trash' ]];
+        then
+            #remove the .git portion of the directory string
+            currentGit=$(dirname "${gitdir}")
+            #check to see if the old hook exists and remove it
+            hook="${gitdir}/hooks/commit-msg"
+            if [[ -e "${hook}" ]];
+            then
+                rm "${hook}"
+            fi
+            #reinitalize the directory
+            git init "${currentGit}"
+         fi
+    done
+else
+    printf "Please be sure to run \e[1m'git init'\e[0m in your current git directories\n"
+    printf "If you are updating, please be sure to remove the old hook from \n"
+    printf "the .git/hooks directory in each of your repos before running init.\n"
+fi
+
+printf "Installation complete\n"
+
+
