@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 function program_is_installed {
   # set to 1 initially
