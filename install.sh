@@ -22,7 +22,7 @@ function os_check()
     echo $result
 }
 
-OS=`uname`
+OS=$(uname)
 OS_TYPE=$(os_check $OS)
 
 if [ "${OS_TYPE}" == 0 ];
@@ -116,7 +116,7 @@ chmod 775 "${current}/hooks/commit-msg"
 
 
 read -p "Do you want me to install the hook for you [Y/n]?" dosearch
-dosearch=${dosearch,,}
+dosearch=$(echo "${dosearch}" | awk '{print tolower($0)}')
 if [[ "${dosearch}" != 'n' ]];
 then
     find $HOME -type d -name ".git" -print0 | while read -d $'\0' gitdir;
