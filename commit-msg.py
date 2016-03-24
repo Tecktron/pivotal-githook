@@ -46,9 +46,8 @@ if not sys.argv[1]:
     exit(1)
 
 # find the ID from the branch name
-branch = check_output(['git', 'symbolic-ref', '--short', 'HEAD']).strip()
-regex = b"-([0-9]+)[-]*"
-match = re.search(regex, branch)
+branch = check_output(['git', 'symbolic-ref', '--short', 'HEAD'])
+match = re.search('-([0-9]+)[-]*', branch.decode("utf-8").strip())
 # If there is no match, then just exit and proceed as normal
 if not match:
     exit(0)
